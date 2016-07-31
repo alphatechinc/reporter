@@ -1,0 +1,7 @@
+report-name: Company.com Daily Sales Summary
+email-from: analytics-team@company.com
+recipients:
+    - jack@company.com
+    - finance@company.com
+    - all-reports@company.com
+query-file: daily_sales_summary.sql
