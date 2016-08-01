@@ -70,7 +70,7 @@ def send_html_report_as_email(subject, recipient_list, emails_from, html):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['from'] = emails_from
-    msg['To'] = recipient_list[0]
+    msg['To'] = ','.join(recipient_list)
     msg.attach(MIMEText(html, 'html'))
     server = smtplib.SMTP('localhost')
     server.sendmail(emails_from, recipient_list, msg.as_string())
