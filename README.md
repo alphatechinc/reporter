@@ -37,5 +37,5 @@ Configure reports through friendly YAML:
 Send an email report daily via `cron` or your favorite job scheduler:
 
         $ crontab -l
-        0 * * * * /usr/bin/reporter /home/analytics/reporter/daily_report.yaml
+        0 0 * * * /usr/bin/reporter /home/analytics/reporter/daily_report.yaml
 
