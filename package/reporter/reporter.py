@@ -6,6 +6,7 @@ import pymysql.cursors
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from collections import OrderedDict
 
 def read_file_to_string(path):
     with open(path, 'r') as f:
@@ -27,15 +28,21 @@ def mysql_query(sql, secrets):
         results = cur.fetchall()
 
     con.close()
-    return results
+
+    # Preserve the order of columns in the SQL statement
+    ordered = []
+    for i in results:
+        ordered.append(OrderedDict(sorted(i.items(), key=lambda t: t[0])))
+
+    return ordered
 
 def html_from_sql_result(result_list):
     html = ''
     if len(result_list) > 0:
         html += '<table>'
-        for row_num, r in enumerate(result_list):
+        for row_num, row in enumerate(result_list):
             html += '\n    <tr>'
-            for k, v in r.iteritems():
+            for k, v in row.iteritems():
                 if row_num == 0:
                     html += '<th>' + str(k) + '</th>'
                 else:
