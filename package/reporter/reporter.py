@@ -7,6 +7,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from collections import OrderedDict
+from inflection import titleize
+import locale
 
 def read_file_to_string(path):
     with open(path, 'r') as f:
@@ -36,6 +38,16 @@ def mysql_query(sql, secrets):
 
     return ordered
 
+def prettify_column(val, column):
+    base = column.split('__')[-1]
+    funcs = {
+        'dollars_cents': lambda v: locale.currency(int(v), grouping=True),
+        'name': lambda v: titleize(v),
+        'city_state': lambda v: ','.join([titleize(v.split(',')[0]), v.split(',')[1]]),
+        }
+    func = funcs.get(base, str)
+    return func(val)
+
 def html_from_sql_result(result_list):
     html = ''
     if len(result_list) > 0:
@@ -44,9 +56,9 @@ def html_from_sql_result(result_list):
             html += '\n    <tr>'
             for k, v in row.iteritems():
                 if row_num == 0:
-                    html += '<th>' + str(k) + '</th>'
+                    html += '<th>' + titleize(str(k)) + '</th>'
                 else:
-                    html += '<td>' + str(v) + '</td>'
+                    html += '<td>' + prettify_column(v, k) + '</td>'
             html += '</tr>'
         html += '\n</table>'
     else:
@@ -114,6 +126,9 @@ if __name__ == '__main__':
         ch.setLevel(logging.getLogger().getEffectiveLevel())
         ch.setFormatter(logging.Formatter(log_format))
         root.addHandler(ch)
+
+    # For currency formatting
+    locale.setlocale(locale.LC_ALL, '')
 
     main(parser_args)
     logging.debug('Completed Reporter.')
