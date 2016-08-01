@@ -30,7 +30,22 @@ def mysql_query(sql, secrets):
     return results
 
 def html_from_sql_result(result_list):
-    return str(result_list)
+    html = ''
+    if len(result_list) > 0:
+        html += '<table>'
+        for row_num, r in enumerate(result_list):
+            html += '\n    <tr>'
+            for k, v in r.iteritems():
+                if row_num == 0:
+                    html += '<th>' + str(k) + '</th>'
+                else:
+                    html += '<td>' + str(v) + '</td>'
+            html += '</tr>'
+        html += '\n</table>'
+    else:
+        html = 'Query returned no results.'
+
+    return html
 
 def send_html_report_as_email(subject, recipient_list, emails_from, html):
     msg = MIMEMultipart('alternative')
@@ -59,8 +74,11 @@ def main(parser_args):
 
     res = mysql_query(sql, secrets)
     html = html_from_sql_result(res)
-    print html
-    send_html_report_as_email(report_conf['report-name'], report_conf['recipients'], report_conf['email-from'], html)
+
+    if parser_args.no_email:
+        print html
+    else:
+        send_html_report_as_email(report_conf['report-name'], report_conf['recipients'], report_conf['email-from'], html)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Reporter')
