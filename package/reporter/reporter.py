@@ -113,7 +113,7 @@ def main(parser_args):
         send_html_report_as_email(report_conf['report-name'], report_conf['recipients'], report_conf['email-from'], html)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Reporter')
+    parser = argparse.ArgumentParser(description='Reporter is a command line tool for sending data driven HTML reports via email.')
     parser.add_argument('report_path', type=str,  help='Path of the report.yaml file.')
     parser.add_argument('--debug', action='store_true', help='Increase verbosity to Logging.DEBUG. (default = logging.ERROR)')
     parser.add_argument('--no_email', action='store_true', help='Don\'t send an email; write the contents to stdout instead.')
