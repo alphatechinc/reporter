@@ -2,13 +2,17 @@ import logging
 import os
 import argparse
 import yaml
-import pymysql.cursors
+import pymysql
+from pymysql.cursors import DictCursorMixin, Cursor
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from collections import OrderedDict
 from inflection import titleize
 import locale
+
+class OrderedDictCursor(DictCursorMixin, Cursor):
+    dict_type = OrderedDict
 
 def read_file_to_string(path):
     with open(path, 'r') as f:
@@ -25,18 +29,13 @@ def mysql_query(sql, secrets):
         cursorclass=pymysql.cursors.DictCursor
         )
 
-    with con.cursor() as cur:
+    with con.cursor(OrderedDictCursor) as cur:
         cur.execute(sql)
         results = cur.fetchall()
 
     con.close()
 
-    # Preserve the order of columns in the SQL statement
-    ordered = []
-    for i in results:
-        ordered.append(OrderedDict(sorted(i.items(), key=lambda t: t[0])))
-
-    return ordered
+    return results
 
 def prettify_column(val, column):
     base = column.split('__')[-1]
