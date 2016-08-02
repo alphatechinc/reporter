@@ -39,7 +39,8 @@ def mysql_query(sql, secrets):
 
 def get_prettify_funcs():
     return {
-        'dollars_cents': lambda v: locale.currency(int(v), grouping=True),
+        'number': lambda v: locale.format('%d', v, grouping=True),
+        'dollars_cents': lambda v: locale.currency(v, grouping=True),
         'name': lambda v: titleize(v),
         'city_state': lambda v: ','.join([titleize(v.split(',')[0]), v.split(',')[1]]),
         }
