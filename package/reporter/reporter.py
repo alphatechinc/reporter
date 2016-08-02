@@ -54,7 +54,7 @@ def html_from_sql_result(result_list):
         for row_num, row in enumerate(result_list):
             if row_num == 0:
                 html += '\n    <tr>'
-                for k, v in row.iteritems():
+                for k in row.keys():
                     html += '<th>' + titleize(str(k)) + '</th>'
                 html += '</tr>'
 
