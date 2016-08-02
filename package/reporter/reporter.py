@@ -56,10 +56,10 @@ def html_from_sql_result(result_list):
 		html += '\n    <tr>'
 		for k, v in row.iteritems():
 		    html += '<th>' + titleize(str(k)) + '</th>'
-		html += '\n    </tr>'
+		html += '</tr>'
 
-            html += '\n    <tr>'
-            for k, v in row.iteritems():
+	    html += '\n    <tr>'
+	    for k, v in row.iteritems():
 		html += '<td>' + prettify_column(v, k) + '</td>'
             html += '</tr>'
         html += '\n</table>'
