@@ -52,15 +52,15 @@ def html_from_sql_result(result_list):
     if len(result_list) > 0:
         html += '<table>'
         for row_num, row in enumerate(result_list):
-	    if row_num == 0:
-		html += '\n    <tr>'
-		for k, v in row.iteritems():
-		    html += '<th>' + titleize(str(k)) + '</th>'
-		html += '</tr>'
+            if row_num == 0:
+                html += '\n    <tr>'
+                for k, v in row.iteritems():
+                    html += '<th>' + titleize(str(k)) + '</th>'
+                html += '</tr>'
 
-	    html += '\n    <tr>'
-	    for k, v in row.iteritems():
-		html += '<td>' + prettify_column(v, k) + '</td>'
+            html += '\n    <tr>'
+            for k, v in row.iteritems():
+                html += '<td>' + prettify_column(v, k) + '</td>'
             html += '</tr>'
         html += '\n</table>'
     else:
