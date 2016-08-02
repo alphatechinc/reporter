@@ -37,15 +37,25 @@ def mysql_query(sql, secrets):
 
     return results
 
-def prettify_column(val, column):
-    base = column.split('__')[-1]
-    funcs = {
+def get_prettify_funcs():
+    return {
         'dollars_cents': lambda v: locale.currency(int(v), grouping=True),
         'name': lambda v: titleize(v),
         'city_state': lambda v: ','.join([titleize(v.split(',')[0]), v.split(',')[1]]),
         }
-    func = funcs.get(base, str)
+
+def prettify_column(val, column):
+    base = column.split('__')[-1]
+    func = get_prettify_funcs().get(base, str)
     return func(val)
+
+def prettify_header(column):
+    column = str(column)
+    for c in get_prettify_funcs().keys():
+        column = column.replace(c, '')
+    column = titleize(column)
+    column = column.strip()
+    return column
 
 def html_from_sql_result(result_list):
     html = ''
@@ -55,7 +65,7 @@ def html_from_sql_result(result_list):
             if row_num == 0:
                 html += '\n    <tr>'
                 for k in row.keys():
-                    html += '<th>' + titleize(str(k)) + '</th>'
+                    html += '<th>' + prettify_header(k) + '</th>'
                 html += '</tr>'
 
             html += '\n    <tr>'
